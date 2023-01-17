@@ -7,7 +7,7 @@ Summary:    A Tux themed 3D coin pusher game.
 Group:      Games
 License:    GPL2.0
 URL:        https://tuxpusher.com/
-Source0:    https://github.com/mrbid/TuxPusher/archive/refs/tags/1.0.4.tar.gz
+Source0:    https://github.com/mrbid/TuxPusher/archive/refs/tags/%{version}/%{oname}-%{version}.tar.gz
 
 BuildRequires: pkgconfig(sdl2)
 BuildRequires: pkgconfig(glfw3)

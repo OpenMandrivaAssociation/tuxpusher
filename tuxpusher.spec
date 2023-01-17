@@ -33,7 +33,7 @@ F = FPS to console.
 %autosetup -n %{oname}-%{version} -p1
 
 %build
-%make_build
+%make_build PREFIX=/usr
 
 %install
 %make_install

@@ -1,4 +1,4 @@
-%degine oname TuxPusher
+%define oname TuxPusher
 
 Name:       tuxpusher
 Version:    1.0.4

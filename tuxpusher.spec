@@ -9,6 +9,8 @@ License:	GPLv2
 URL:		https://github.com/mrbid/tuxpusher
 Source0:	https://github.com/mrbid/TuxPusher/archive/refs/tags/%{version}/%{name}-%{version}.tar.gz
 
+BuildRequires:	desktop-file-utils
+BuildRequires:	imagemagick
 BuildRequires:	pkgconfig(glfw3)
 
 %description
@@ -19,7 +21,7 @@ A Tux themed 3D coin pusher game.
 %{_bindir}/%{name}
 %{_iconsdir}/hicolor/*/apps/%{name}.png
 %{_datadir}/pixmaps/%{name}.xpm
-%{_datadir}/applications/openmandriva-%{name}.desktop
+%{_datadir}/applications/%{name}.desktop
 
 
 #--------------------------------------------------------------------
@@ -43,18 +45,10 @@ install -pm 0755 %{name} %{buildroot}%{_bindir}
 
 # .desktop file
 install -dm 0755 %{buildroot}%{_datadir}/applications/
-cat > %{buildroot}%{_datadir}/applications/openmandriva-%{name}.desktop << EOF
-[Desktop Entry]
-Name=%{name}
-Comment=A fun coin pusher game featuring Tux!
-Exec=%{name}
-Icon=%{name}
-Terminal=false
-Type=Application
-StartupNotify=false
-Categories=Application;Game;ArcadeGame;
-X-Vendor=OpenMandriva
-EOF
+desktop-file-install \
+	--set-icon=%{name} \
+	--dir %{buildroot}%{_datadir}/applications \
+	snap/gui/%{name}.desktop
 
 # icons
 for d in 16 32 48 64 72 128 256

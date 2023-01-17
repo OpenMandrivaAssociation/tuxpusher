@@ -1,41 +1,71 @@
-%define _empty_manifest_terminate_build 0
+%global oname TuxPusher
 
-%define oname TuxPusher
+Summary:	A Tux themed 3D coin pusher game
+Name:		tuxpusher
+Version:	1.0.4
+Release:	1
+Group:		Games
+License:	GPLv2
+URL:		https://github.com/mrbid/tuxpusher
+Source0:	https://github.com/mrbid/TuxPusher/archive/refs/tags/%{version}/%{name}-%{version}.tar.gz
 
-Name:       tuxpusher
-Version:    1.0.4
-Release:    1
-Summary:    A Tux themed 3D coin pusher game.
-Group:      Games
-License:    GPL2.0
-URL:        https://tuxpusher.com/
-Source0:    https://github.com/mrbid/TuxPusher/archive/refs/tags/%{version}/%{oname}-%{version}.tar.gz
-
-BuildRequires: pkgconfig(sdl2)
-BuildRequires: pkgconfig(glfw3)
+BuildRequires:	pkgconfig(glfw3)
 
 %description
 A Tux themed 3D coin pusher game.
-Mechanics / Rules
-Getting a gold coin in a silver slot rewards you 2x silver coins.
-Getting a gold coin in a gold slot rewards you 2x gold coins.
-Getting a tux in a slot when you already have the tux gives you 6x gold coins and 6x silver coins.
-Controls
-Just move around your mouse and click to release a coin.
-
-Left Click = Release coin.
-Right Click = Show/Hide cursor.
-C = Orthographic/Perspective.
-F = FPS to console.
-
-
-%prep
-%autosetup -n %{oname}-%{version} -p1
-
-%build
-%make_build PREFIX=/usr
-
-%install
-%make_install
 
 %files
+%doc LICENSE
+%{_bindir}/%{name}
+%{_iconsdir}/hicolor/*/apps/%{name}.png
+%{_datadir}/pixmaps/%{name}.xpm
+%{_datadir}/applications/openmandriva-%{name}.desktop
+
+
+#--------------------------------------------------------------------
+
+%prep
+%autosetup -p1 -n %{oname}-%{version}
+
+# fix makedile
+sed -i -e "s|gcc|\$(CC) %{optflags}|g" makefile
+
+%build
+%set_build_flags
+%make_build
+#$CC main.c glad_gl.c -I inc -Ofast %{optflags} -lglfw -lm -o %{name}
+
+%install
+#%%make_install
+# binary
+install -pm 0755 -d %{buildroot}%{_bindir}
+install -pm 0755 %{name} %{buildroot}%{_bindir}
+
+# .desktop file
+install -dm 0755 %{buildroot}%{_datadir}/applications/
+cat > %{buildroot}%{_datadir}/applications/openmandriva-%{name}.desktop << EOF
+[Desktop Entry]
+Name=%{name}
+Comment=A fun coin pusher game featuring Tux!
+Exec=%{name}
+Icon=%{name}
+Terminal=false
+Type=Application
+StartupNotify=false
+Categories=Application;Game;ArcadeGame;
+X-Vendor=OpenMandriva
+EOF
+
+# icons
+for d in 16 32 48 64 72 128 256
+do
+	install -dm 0755 %{buildroot}%{_iconsdir}/hicolor/${d}x${d}/apps/
+#	rsvg-convert -f png -h ${d} -w ${d} snap/gui/%{name}.png \
+#			-o %{buildroot}%{_iconsdir}/hicolor/${d}x${d}/apps/%{name}.png
+	convert -background none -resize "${d}x${d}" snap/gui/%{name}.png \
+			%{buildroot}%{_iconsdir}/hicolor/${d}x${d}/apps/%{name}.png
+done
+install -dm 0755 %{buildroot}%{_datadir}/pixmaps/
+convert -resize 32x32 snap/gui/%{name}.png \
+	%{buildroot}%{_datadir}/pixmaps/%{name}.xpm
+

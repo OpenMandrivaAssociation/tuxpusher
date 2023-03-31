@@ -3,7 +3,7 @@
 Summary:	A Tux themed 3D coin pusher game
 Name:		tuxpusher
 Version:	1.0.4
-Release:	1
+Release:	2
 Group:		Games
 License:	GPLv2
 URL:		https://github.com/mrbid/tuxpusher
